@@ -1,3 +1,4 @@
+<?php
 // Register Custom Post Type
 function tvd_register_tutorial_post_type() {
 
@@ -36,18 +37,10 @@ function tvd_register_tutorial_post_type() {
 		'pages'                 => true,
 		'feeds'                 => true,
 	);
-	$capabilities = array(
-		'edit_post'             => 'edit_tutorial',
-		'read_post'             => 'read_tutorial',
-		'delete_post'           => 'delete_tutorial',
-		'edit_posts'            => 'edit_tutorials',
-		'edit_others_posts'     => 'edit_others_tutorials',
-		'publish_posts'         => 'publish_tutorials',
-		'read_private_posts'    => 'read_private_tutorial',
-	);
+
 	$args = array(
 		'label'                 => __( 'Tutorial', 'text_domain' ),
-		'description'           => __( 'Post Type Description', 'text_domain' ),
+		'description'           => __( 'Custom post type for tutorials', 'text_domain' ),
 		'labels'                => $labels,
 		'supports'              => array( 'title', 'editor', 'thumbnail', 'comments', 'custom-fields', 'page-attributes', 'post-formats' ),
 		'taxonomies'            => array( 'category', 'post_tag' ),
@@ -65,9 +58,49 @@ function tvd_register_tutorial_post_type() {
 		'publicly_queryable'    => true,
 		'query_var'             => 'tutorial',
 		'rewrite'               => $rewrite,
-		'capabilities'          => $capabilities,
+		'capability_type'     	=> 'page', //Which capabilities required to edit this custom post type
 	);
 	register_post_type( 'tutorial', $args );
 
 }
+
+// Register Custom Taxonomy
+function tvd_register_custom_taxonomy() {
+
+	$labels = array(
+		'name'                       => _x( 'Levels', 'Taxonomy General Name', 'text_domain' ),
+		'singular_name'              => _x( 'Level', 'Taxonomy Singular Name', 'text_domain' ),
+		'menu_name'                  => __( 'Level', 'text_domain' ),
+		'all_items'                  => __( 'All Levels', 'text_domain' ),
+		'parent_item'                => __( 'Parent Level', 'text_domain' ),
+		'parent_item_colon'          => __( 'Parent Level:', 'text_domain' ),
+		'new_item_name'              => __( 'New Level Name', 'text_domain' ),
+		'add_new_item'               => __( 'Add New Level', 'text_domain' ),
+		'edit_item'                  => __( 'Edit Level', 'text_domain' ),
+		'update_item'                => __( 'Update Level', 'text_domain' ),
+		'view_item'                  => __( 'View Level', 'text_domain' ),
+		'separate_items_with_commas' => __( 'Separate levels with commas', 'text_domain' ),
+		'add_or_remove_items'        => __( 'Add or remove levels', 'text_domain' ),
+		'choose_from_most_used'      => __( 'Choose from the most used', 'text_domain' ),
+		'popular_items'              => __( 'Popular Levels', 'text_domain' ),
+		'search_items'               => __( 'Search Levels', 'text_domain' ),
+		'not_found'                  => __( 'Not Found', 'text_domain' ),
+		'no_terms'                   => __( 'No levels', 'text_domain' ),
+		'items_list'                 => __( 'Levels list', 'text_domain' ),
+		'items_list_navigation'      => __( 'Levels list navigation', 'text_domain' ),
+	);
+	$args = array(
+		'labels'                     => $labels,
+		'hierarchical'               => false,
+		'public'                     => true,
+		'show_ui'                    => true,
+		'show_admin_column'          => true,
+		'show_in_nav_menus'          => true,
+		'show_tagcloud'              => true,
+	);
+	register_taxonomy( 'level', array( 'tutorial' ), $args );
+
+}
+
+add_action( 'init', 'tvd_register_custom_taxonomy', 0 );
 add_action( 'init', 'tvd_register_tutorial_post_type', 0 );
